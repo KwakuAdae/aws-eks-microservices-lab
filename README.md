@@ -5,7 +5,7 @@ A hands-on lab that runs a **two-service application** on **Amazon EKS**. A **fr
 **Application Load Balancer** created from a Kubernetes **Ingress**. The API stores data in
 **DynamoDB** using **EKS Pod Identity**, so there are no AWS access keys anywhere.
 
-> This lab builds on [Deploy a Website to Amazon EKS](https://github.com/KwakuAdae/kwakuadae-aws-eks-website-lab),
+> This lab builds on [Deploy a Website to Amazon EKS](https://github.com/KwakuAdae/aws-eks-website-lab),
 > which covers one container, plain manifests and a `LoadBalancer` Service. Here you go further:
 > multiple services, Helm, path-based routing, AWS permissions for pods, and production
 > settings such as PodDisruptionBudgets and topology spread.
@@ -310,8 +310,8 @@ the ALB before the cluster disappears. Otherwise the ALB is orphaned and blocks 
 - **Argo CD** to deploy the Helm chart with GitOps
 - **NetworkPolicies** (enable network policy support in the VPC CNI) so only the frontend can call the API
 - Package and publish the chart to **ECR as an OCI artifact**: `helm push`
-- Sister labs: [EKS website](https://github.com/KwakuAdae/kwakuadae-aws-eks-website-lab) ·
-  [ECS Fargate](https://github.com/KwakuAdae/aws-ecr-ecs-fargate-lab) ·
+- Sister labs: [EKS website](https://github.com/KwakuAdae/aws-eks-website-lab) ·
+  [ECS Fargate](https://github.com/KwakuAdae/aws-ecs-fargate-website-lab) ·
   [API Gateway + SAM](https://github.com/KwakuAdae/aws-api-gateway-sam-lab) ·
   [CloudWatch Logs + Terraform](https://github.com/KwakuAdae/aws-cloudwatch-logs-terraform-lab)
 
