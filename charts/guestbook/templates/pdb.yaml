@@ -1,0 +1,17 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+{{- range $component := list "api" "frontend" }}
+---
+# Keeps at least N pods running during voluntary disruptions (node upgrades, drains)
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "guestbook.name" $ }}-{{ $component }}
+  labels:
+    {{- include "guestbook.labels" $ | nindent 4 }}
+spec:
+  minAvailable: {{ $.Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "guestbook.selector" (dict "ctx" $ "component" $component) | nindent 6 }}
+{{- end }}
+{{- end }}

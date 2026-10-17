@@ -1,0 +1,9 @@
+apiVersion: v2
+name: guestbook
+description: Two-service guestbook (nginx frontend + Python API on DynamoDB) for the EKS microservices lab
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Kwaku Adae
+    url: https://github.com/KwakuAdae

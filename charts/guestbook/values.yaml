@@ -1,0 +1,56 @@
+# Default values (dev). Override per environment with -f values-prod.yaml or --set.
+
+awsRegion: us-east-1
+
+api:
+  image:
+    repository: ""          # set by scripts/04-deploy-app.sh to your ECR repo, e.g. 123456789012.dkr.ecr.us-east-1.amazonaws.com/guestbook-api
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8080
+  healthPath: /api/health    # ALB target-group health check (set on the Service)
+  tableName: eks-guestbook-lab-messages
+  greeting: "Welcome to the EKS guestbook!"
+  pageSize: 20
+  serviceAccount:
+    # This name must match the EKS Pod Identity association (scripts/03-setup-aws-access.sh)
+    name: guestbook-api
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { cpu: 250m, memory: 192Mi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilizationPercentage: 60
+
+frontend:
+  image:
+    repository: ""
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8080
+  healthPath: /healthz
+  resources:
+    requests: { cpu: 25m, memory: 32Mi }
+    limits: { cpu: 200m, memory: 64Mi }
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 60
+
+ingress:
+  enabled: true
+  className: alb
+  # Annotations read by the AWS Load Balancer Controller
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

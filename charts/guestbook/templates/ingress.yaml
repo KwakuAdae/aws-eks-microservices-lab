@@ -1,0 +1,28 @@
+{{- if .Values.ingress.enabled }}
+# One Application Load Balancer, two services: /api/* → API, everything else → frontend
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "guestbook.name" . }}
+  labels:
+    {{- include "guestbook.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.ingress.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "guestbook.name" . }}-api
+                port: { number: {{ .Values.api.port }} }
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "guestbook.name" . }}-frontend
+                port: { number: {{ .Values.frontend.port }} }
+{{- end }}

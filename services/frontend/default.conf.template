@@ -1,0 +1,24 @@
+# Rendered at container start by the nginx image (envsubst on ${API_UPSTREAM}).
+# On EKS the ALB Ingress already routes /api/* to the API Service; this proxy also makes
+# the frontend work on its own (docker compose, kubectl port-forward).
+server {
+    listen       8080;
+    server_name  _;
+    root   /usr/share/nginx/html;
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "OK\n";
+    }
+
+    location /api/ {
+        proxy_pass http://${API_UPSTREAM};
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}

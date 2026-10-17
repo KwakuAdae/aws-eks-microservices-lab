@@ -1,0 +1,21 @@
+{{- range $component := list "api" "frontend" }}
+{{- $values := index $.Values $component }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "guestbook.name" $ }}-{{ $component }}
+  labels:
+    {{- include "guestbook.labels" $ | nindent 4 }}
+  annotations:
+    # Each ALB target group health-checks its own service's path
+    alb.ingress.kubernetes.io/healthcheck-path: {{ $values.healthPath }}
+spec:
+  type: ClusterIP      # internal only; the ALB Ingress is the public entry point
+  selector:
+    {{- include "guestbook.selector" (dict "ctx" $ "component" $component) | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $values.port }}
+      targetPort: http
+{{- end }}

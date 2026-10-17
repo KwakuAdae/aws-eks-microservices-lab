@@ -1,0 +1,10 @@
+Guestbook {{ .Values.api.image.tag }} deployed to namespace {{ .Release.Namespace }}.
+
+Wait for the ALB address (2-3 minutes the first time):
+  kubectl get ingress {{ include "guestbook.name" . }} -n {{ .Release.Namespace }} -w
+
+Then open http://<ADDRESS> in your browser, or:
+  curl http://<ADDRESS>/api/info
+
+Without an Ingress (or before it's ready):
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "guestbook.name" . }}-frontend 8080:{{ .Values.frontend.port }}

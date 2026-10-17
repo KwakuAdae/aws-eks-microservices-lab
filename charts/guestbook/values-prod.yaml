@@ -1,0 +1,20 @@
+# Production overrides: more replicas, bigger limits, different greeting.
+#   helm upgrade --install guestbook charts/guestbook -f charts/guestbook/values-prod.yaml ...
+api:
+  replicas: 3
+  greeting: "Welcome to the PRODUCTION guestbook!"
+  resources:
+    requests: { cpu: 100m, memory: 128Mi }
+    limits: { cpu: 500m, memory: 256Mi }
+  autoscaling:
+    minReplicas: 3
+    maxReplicas: 10
+
+frontend:
+  replicas: 3
+  autoscaling:
+    minReplicas: 3
+    maxReplicas: 6
+
+podDisruptionBudget:
+  minAvailable: 2

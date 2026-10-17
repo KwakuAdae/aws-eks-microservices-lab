@@ -1,0 +1,11 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GuestbookTableOnly",
+      "Effect": "Allow",
+      "Action": ["dynamodb:Query", "dynamodb:PutItem"],
+      "Resource": "arn:aws:dynamodb:REGION:ACCOUNT_ID:table/TABLE_NAME"
+    }
+  ]
+}

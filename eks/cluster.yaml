@@ -1,0 +1,41 @@
+# eksctl cluster config for the microservices lab.
+#   eksctl create cluster -f eks/cluster.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: eks-guestbook-lab
+  region: us-east-1
+  version: "1.31"
+  tags:
+    project: eks-microservices-lab
+
+# Add-ons managed by EKS
+addons:
+  - name: vpc-cni
+  - name: coredns
+  - name: kube-proxy
+  - name: metrics-server            # CPU metrics for the HorizontalPodAutoscalers
+  - name: eks-pod-identity-agent    # hands AWS credentials to pods (EKS Pod Identity)
+
+iam:
+  # The AWS Load Balancer Controller needs AWS permissions to create ALBs.
+  # eksctl creates the IAM role with AWS's recommended policy and links it to this
+  # Kubernetes service account through EKS Pod Identity.
+  podIdentityAssociations:
+    - namespace: kube-system
+      serviceAccountName: aws-load-balancer-controller
+      createServiceAccount: true
+      wellKnownPolicies:
+        awsLoadBalancerController: true
+
+managedNodeGroups:
+  - name: app-nodes
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    volumeSize: 20
+    privateNetworking: true         # nodes live in private subnets; only the ALB is public
+    labels:
+      role: app

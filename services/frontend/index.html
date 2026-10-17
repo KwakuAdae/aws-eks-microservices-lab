@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EKS Guestbook</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="card">
+    <h1>EKS Guestbook ☸️</h1>
+    <p id="greeting" class="sub">Loading…</p>
+
+    <section class="facts" aria-label="Which pod answered">
+      <div><span>API pod</span><code id="pod">–</code></div>
+      <div><span>Node</span><code id="node">–</code></div>
+      <div><span>Version</span><code id="version">–</code></div>
+      <div class="wide"><span>AWS identity (via Pod Identity)</span><code id="identity">–</code></div>
+    </section>
+
+    <form id="form">
+      <input id="name" placeholder="Your name" maxlength="40" required>
+      <textarea id="message" placeholder="Leave a message" maxlength="280" rows="2" required></textarea>
+      <button>Sign the guestbook</button>
+    </form>
+    <p id="status" role="status"></p>
+
+    <ul id="messages"></ul>
+    <p class="meta">Frontend (nginx) and API (Python) run as separate Deployments behind one ALB Ingress · Lab by Kwaku Adae</p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
